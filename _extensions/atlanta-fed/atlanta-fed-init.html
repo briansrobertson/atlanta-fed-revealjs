@@ -1,0 +1,81 @@
+<!-- Atlanta Fed RevealJS Theme — Init Script -->
+<!-- Injected into every presentation using this extension -->
+<script>
+(function () {
+  // Run after Reveal.js has fully initialized
+  function onRevealReady() {
+    injectLogo();
+    setupSlideNumbers();
+  }
+
+  // ── Logo injection ──────────────────────────────────────────────────────
+  // Appends logo.png to the title slide at the position specified in the SCSS.
+  // The logo.png file must live in the same directory as the rendered HTML.
+  function injectLogo() {
+    var titleSlide = document.getElementById('title-slide');
+    if (!titleSlide) return;
+    if (titleSlide.querySelector('.title-logo')) return; // already injected
+    var logo = document.createElement('img');
+    logo.src = 'logo.png';
+    logo.className = 'title-logo';
+    logo.alt = 'Federal Reserve Bank of Atlanta';
+    titleSlide.appendChild(logo);
+  }
+
+  // ── Custom slide numbering ───────────────────────────────────────────────
+  // • Hidden on the title slide
+  // • First content slide = 1, incrementing from there
+  function setupSlideNumbers() {
+    if (typeof Reveal === 'undefined') return;
+
+    // Force Reveal to show slide numbers so the element exists in the DOM,
+    // then we take over the display logic ourselves.
+    Reveal.configure({ slideNumber: true });
+
+    var numEl = document.querySelector('.reveal .slide-number');
+    if (!numEl) return;
+
+    function update() {
+      var indices = Reveal.getIndices();
+      var h = indices.h; // 0 = title slide
+      if (h === 0) {
+        numEl.style.display = 'none';
+      } else {
+        numEl.style.display = '';
+        numEl.textContent = String(h); // title = 0, so first content = 1
+      }
+    }
+
+    Reveal.on('slidechanged', update);
+    Reveal.on('ready', update);
+    update();
+  }
+
+  // Wait for Reveal to be ready; it may already be initialised
+  if (typeof Reveal !== 'undefined' && Reveal.isReady && Reveal.isReady()) {
+    onRevealReady();
+  } else {
+    document.addEventListener('DOMContentLoaded', function () {
+      if (typeof Reveal !== 'undefined') {
+        Reveal.on('ready', onRevealReady);
+      } else {
+        // Quarto initialises Reveal lazily — poll briefly
+        var attempts = 0;
+        var poll = setInterval(function () {
+          attempts++;
+          if (typeof Reveal !== 'undefined') {
+            clearInterval(poll);
+            if (Reveal.isReady && Reveal.isReady()) {
+              onRevealReady();
+            } else {
+              Reveal.on('ready', onRevealReady);
+            }
+          } else if (attempts > 50) {
+            clearInterval(poll);
+          }
+        }, 100);
+      }
+    });
+  }
+})();
+</script>

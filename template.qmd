@@ -1,0 +1,47 @@
+---
+title: "Presentation Title"
+subtitle: "Subtitle or Author Name"
+date: "April 20, 2026"
+format:
+  atlanta-fed-revealjs:
+    title-slide-attributes:
+      data-background-image: title_background.jpg
+      data-background-size: cover
+      data-background-position: center
+---
+
+## Slide Title
+
+Body text in IBM Plex Sans 28pt. Replace this with your content.
+
+- Bullet point one
+- Bullet point two
+- Bullet point three
+
+## Another Slide
+
+Use `##` to create each new content slide.
+
+| Column A | Column B | Column C |
+|----------|----------|----------|
+| Value 1  | Value 2  | Value 3  |
+| Value 4  | Value 5  | Value 6  |
+
+## Two-Column Layout
+
+:::  {.columns}
+::: {.column}
+**Left column**
+
+- Item one
+- Item two
+- Item three
+:::
+::: {.column}
+**Right column**
+
+- Item A
+- Item B
+- Item C
+:::
+:::
