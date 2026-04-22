@@ -2,7 +2,7 @@
 title: "Presentation Title"
 subtitle: "Subtitle or Author Name"
 date: "March 14, 2023"
-Date-format: "MMMM D, YYYY"
+date-format: "MMMM D, YYYY"
 format:
   atlanta-fed-revealjs:
     title-slide-attributes:
