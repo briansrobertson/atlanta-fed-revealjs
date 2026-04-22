@@ -32,7 +32,7 @@ Add the following YAML front matter to your `.qmd` file:
 ---
 title: "Presentation Title"
 subtitle: "Subtitle or Author Name"
-date: "April 20, 2026"
+date: "Date"
 format:
   atlanta-fed-revealjs:
     title-slide-attributes:
