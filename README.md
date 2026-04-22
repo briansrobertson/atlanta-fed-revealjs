@@ -24,7 +24,7 @@ Add the following YAML front matter to your `.qmd` file:
 ---
 title: "Presentation Title"
 subtitle: "Subtitle or Author Name"
-date: "Date"
+date: "March 14, 2023"
 format:
   atlanta-fed-revealjs: default
 ---

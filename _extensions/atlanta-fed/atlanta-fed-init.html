@@ -48,7 +48,113 @@
     setupSlideNumbers();
     fixTitleSlide();
     injectBackground();
+    fixTitleText();
+    fixContentHeadings();
     fixContentSpacing();
+  }
+
+  // ── Title text: max-width, 2-line clamp, subtitle repositioning ─────────
+  function fixTitleText() {
+    var titleSlide = document.getElementById('title-slide');
+    if (!titleSlide) return;
+
+    var titleEl    = titleSlide.querySelector('h1.title');
+    var subtitleEl = titleSlide.querySelector('.subtitle');
+    var authorEl   = titleSlide.querySelector('.author');
+    if (!titleEl) return;
+
+    var TITLE_TOP = 264;  // px from top of slide
+    var LEFT      = 60;   // px from left
+    var RIGHT_PAD = 60;   // match left
+    var SLIDE_W   = 1280;
+    var MAX_W     = SLIDE_W - LEFT - RIGHT_PAD; // 1160px
+    var MAX_LINES = 2;
+    var MIN_FONT  = 36;   // floor so text never becomes unreadable
+
+    // Set max-width to mirror left padding on the right
+    titleEl.style.setProperty('max-width', MAX_W + 'px', 'important');
+    titleEl.style.setProperty('width', MAX_W + 'px', 'important');
+
+    // Shrink font until title fits in MAX_LINES lines
+    var fontSize = parseFloat(getComputedStyle(titleEl).fontSize) || 80;
+    titleEl.style.setProperty('font-size', fontSize + 'px', 'important');
+
+    function getLineH() {
+      var lh = getComputedStyle(titleEl).lineHeight;
+      return lh === 'normal' ? fontSize * 1.15 : parseFloat(lh);
+    }
+
+    var maxH = getLineH() * MAX_LINES;
+    while (titleEl.scrollHeight > maxH + 2 && fontSize > MIN_FONT) {
+      fontSize -= 1;
+      titleEl.style.setProperty('font-size', fontSize + 'px', 'important');
+      maxH = getLineH() * MAX_LINES;
+    }
+
+    // Reposition subtitle/author: maintain gap below actual title bottom
+    var GAP = 22; // px between title bottom and subtitle top
+    var titleBottom = TITLE_TOP + titleEl.offsetHeight;
+    var subtitleTop = titleBottom + GAP;
+
+    if (subtitleEl) {
+      subtitleEl.style.setProperty('top', subtitleTop + 'px', 'important');
+    }
+    if (authorEl) {
+      var subtitleH = subtitleEl ? subtitleEl.offsetHeight : 0;
+      authorEl.style.setProperty('top', (subtitleTop + subtitleH + 8) + 'px', 'important');
+    }
+  }
+
+  // ── Content slide headings: shrink font only if text overflows header bar ─
+  function fixContentHeadings() {
+    var BAR_H    = 168;  // px — header bar height
+    var MARGIN   = 12;   // px — 1/8" clearance top & bottom
+    var MAX_H    = BAR_H - (MARGIN * 2); // 144px usable
+    var MIN_FONT = 18;   // floor
+    var DEFAULT_FONT = 48; // 36pt — only reduce below this if needed
+
+    var headings = document.querySelectorAll(
+      '.reveal .slides section:not(#title-slide):not(.title-slide) h2'
+    );
+
+    headings.forEach(function(h2) {
+      // Reset to default first
+      h2.style.setProperty('font-size', DEFAULT_FONT + 'px', 'important');
+
+      // Measure natural text height using a temp block-display clone
+      var clone = h2.cloneNode(true);
+      clone.style.cssText = [
+        'position:absolute',
+        'visibility:hidden',
+        'display:block',
+        'font-size:' + DEFAULT_FONT + 'px',
+        'width:' + h2.offsetWidth + 'px',
+        'line-height:' + getComputedStyle(h2).lineHeight,
+        'white-space:normal',
+        'padding:0',
+        'margin:0'
+      ].join(';');
+      document.body.appendChild(clone);
+      var textH = clone.scrollHeight;
+      document.body.removeChild(clone);
+
+      // Only shrink if natural text height exceeds usable area
+      if (textH <= MAX_H) return;
+
+      var fontSize = DEFAULT_FONT;
+      clone = h2.cloneNode(true);
+      clone.style.cssText = 'position:absolute;visibility:hidden;display:block;width:' + h2.offsetWidth + 'px;white-space:normal;padding:0;margin:0;';
+      document.body.appendChild(clone);
+
+      while (textH > MAX_H && fontSize > MIN_FONT) {
+        fontSize -= 1;
+        clone.style.fontSize = fontSize + 'px';
+        textH = clone.scrollHeight;
+      }
+      document.body.removeChild(clone);
+
+      h2.style.setProperty('font-size', fontSize + 'px', 'important');
+    });
   }
 
   // ── Fix content slide spacing ───────────────────────────────────────────
