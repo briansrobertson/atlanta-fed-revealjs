@@ -13,13 +13,13 @@ A [Quarto](https://quarto.org) extension providing a [RevealJS](https://revealjs
 Install the extension into an existing Quarto project:
 
 ```bash
-quarto add <your-github-username>/atlanta-fed-revealjs
+quarto add briansrobertson/atlanta-fed-revealjs
 ```
 
 Or use this repo as a template to start a new presentation:
 
 ```bash
-quarto use template <your-github-username>/atlanta-fed-revealjs
+quarto use template briansrobertson/atlanta-fed-revealjs
 ```
 
 > **Note:** After installing, copy `logo.png` and `title_background.jpg` into your project directory (same folder as your `.qmd` file).
