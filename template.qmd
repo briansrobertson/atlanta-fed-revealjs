@@ -1,7 +1,7 @@
 ---
 title: "Presentation Title"
 subtitle: "Subtitle or Author Name"
-date: "April 20, 2026"
+date: "Date"
 format:
   atlanta-fed-revealjs:
     title-slide-attributes:

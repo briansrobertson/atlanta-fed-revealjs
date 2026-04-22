@@ -43,79 +43,89 @@ $link-color:                  $atl-blue-dark !default;
 }
 
 // ─── TITLE SLIDE ─────────────────────────────────────────────────────────────
-// Background image is set via YAML title-slide-attributes.
-// Elements are absolutely positioned to match PPT spec.
+// Quarto adds class="center" to #title-slide which triggers flex centering.
+// We must forcefully disable that and re-establish absolute positioning.
 
-#title-slide,
-.reveal .slides section.title-slide {
-  background: transparent; // image set by Quarto/RevealJS
+.reveal .slides #title-slide,
+.reveal .slides section#title-slide,
+.reveal.center .slides #title-slide {
+  display: block !important;
+  align-items: unset !important;
+  justify-content: unset !important;
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
   color: $atl-white;
   text-align: left;
-  padding: 0 !important;
 
-  // Date — 20pt (27px) at 1.25", 1.35"
+  // Flatten any Quarto wrapper divs
+  > div {
+    display: contents !important;
+  }
+
+  // Date — 20pt (27px) at 1.25" left, 1.35" top
   .date {
-    position: absolute;
-    top: 130px;
-    left: 120px;
-    font-size: 27px;
-    font-weight: 400;
-    color: $atl-white;
-    margin: 0;
-    line-height: 1.3;
-    text-align: left;
+    position: absolute !important;
+    top: 130px !important;
+    left: 60px !important;
+    font-size: 34px !important;
+    font-weight: 400 !important;
+    color: $atl-white !important;
+    margin: 0 !important;
+    line-height: 1.3 !important;
+    text-align: left !important;
+    transform: none !important;
   }
 
-  // Title — 48pt (64px) bold at 1.25", 2.75"
+  // Title — 48pt (64px) bold at 1.25" left, 2.75" top
   h1.title {
-    position: absolute;
-    top: 264px;
-    left: 120px;
-    font-size: 64px;
-    font-weight: 700;
-    color: $atl-white;
-    margin: 0;
-    line-height: 1.15;
-    text-align: left;
-    max-width: 820px;
+    position: absolute !important;
+    top: 264px !important;
+    left: 60px !important;
+    font-size: 80px !important;
+    font-weight: 700 !important;
+    color: $atl-white !important;
+    margin: 0 !important;
+    line-height: 1.15 !important;
+    text-align: left !important;
+    max-width: 820px !important;
+    transform: none !important;
+    text-shadow: none !important;
+    letter-spacing: normal !important;
   }
 
-  // Subtitle — 24pt (32px) at 1.25", 3.75"
+  // Subtitle — 24pt (32px) at 1.25" left, 3.75" top
   .subtitle {
-    position: absolute;
-    top: 360px; // 3.75" × 96dpi
-    left: 120px;
-    font-size: 32px;
-    font-weight: 400;
-    color: $atl-white;
-    margin: 0;
-    line-height: 1.3;
-    text-align: left;
-    max-width: 820px;
+    position: absolute !important;
+    top: 378px !important;
+    left: 60px !important;
+    font-size: 40px !important;
+    font-weight: 400 !important;
+    color: $atl-white !important;
+    margin: 0 !important;
+    line-height: 1.3 !important;
+    text-align: left !important;
+    max-width: 820px !important;
+    transform: none !important;
   }
 
-  // Author (if present) — same style as subtitle, below it
+  // Author — 20pt (27px) at 1.25" left, below subtitle
   .author {
-    position: absolute;
-    top: 410px;
-    left: 120px;
-    font-size: 27px;
-    font-weight: 400;
-    color: $atl-white;
-    margin: 0;
-    line-height: 1.4;
-    text-align: left;
+    position: absolute !important;
+    top: 441px !important;
+    left: 60px !important;
+    font-size: 34px !important;
+    font-weight: 400 !important;
+    color: $atl-white !important;
+    margin: 0 !important;
+    line-height: 1.4 !important;
+    text-align: left !important;
+    transform: none !important;
   }
 
-  // Logo — injected by atlanta-fed-init.html JS at 1.25", 6.25"
-  .title-logo {
-    position: absolute;
-    top: 600px;
-    left: 120px;
-    height: 64px;
-    width: auto;
-    display: block;
-  }
+  // Logo — rendered via CSS ::after in atlanta-fed-init.html (embedded data URI)
 }
 
 // ─── CONTENT SLIDES ──────────────────────────────────────────────────────────
@@ -130,17 +140,20 @@ $link-color:                  $atl-blue-dark !default;
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 168px; // 1.75"
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: 168px !important; // 1.75"
     background: linear-gradient(
       to right,
       #{$atl-blue-dark} 0%,
       #{$atl-blue-mid}  55%,
       #{$atl-blue-light} 100%
-    );
+    ) !important;
     z-index: 0;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   // Slide heading — 36pt (48px) white, centered in 168px bar
@@ -196,38 +209,43 @@ $link-color:                  $atl-blue-dark !default;
   // Quarto wraps reveal content so we use a combination approach
   display: block !important;
 
-  > *:not(h2):first-of-type {
-    margin-top: 192px !important; // 2" from top
-  }
-
-  > *:not(h2) {
-    padding-left: 96px;  // 1" from left
-    padding-right: 96px;
-    box-sizing: border-box;
-  }
+  // Spacing between content elements handled by JS fixContentSpacing()
 
   // Avoid double-padding for nested lists
   > ul ul, > ol ol, > ul ol, > ol ul,
   li ul, li ol {
     padding-left: 1.5em;
   }
-
-  // Override p left padding for normal body paragraphs
-  > p {
-    padding-left: 96px;
-    padding-right: 96px;
-    font-size: 37px; // 28pt
-    line-height: 1.4;
-    color: $atl-black;
-  }
-
-  > ul, > ol {
-    padding-left: calc(96px + 1.2em);
-    font-size: 37px; // 28pt
-    line-height: 1.5;
-    color: $atl-black;
-  }
 }
+
+// Aggressively zero RevealJS default margins between content elements
+.reveal .slides section:not(#title-slide):not(.title-slide) p {
+  margin: 0 0 0.3em 0 !important;
+  padding-left: 96px;
+  padding-right: 96px;
+  font-size: 37px; // 28pt
+  line-height: 1.4;
+  color: $atl-black;
+}
+
+.reveal .slides section:not(#title-slide):not(.title-slide) ul,
+.reveal .slides section:not(#title-slide):not(.title-slide) ol {
+  margin: 0 !important;
+  padding-left: calc(96px + 1.2em);
+  padding-right: 96px;
+  box-sizing: border-box;
+  width: 100%;
+  font-size: 37px; // 28pt
+  line-height: 1.5;
+  color: $atl-black;
+}
+
+.reveal .slides section:not(#title-slide):not(.title-slide) p + ul,
+.reveal .slides section:not(#title-slide):not(.title-slide) p + ol {
+  margin-top: 0.2em !important;
+}
+
+
 
 // ─── SLIDE NUMBER ────────────────────────────────────────────────────────────
 // Managed by JS (atlanta-fed-init.html): hidden on title slide,
@@ -263,10 +281,13 @@ $link-color:                  $atl-blue-dark !default;
 }
 
 // Tables
-.reveal table {
+.reveal .slides section:not(#title-slide):not(.title-slide) table {
   font-size: 32px; // slightly smaller than body
   border-collapse: collapse;
-  width: 100%;
+  width: calc(100% - 192px);
+  margin-left: 96px;
+  margin-right: 96px;
+  box-sizing: border-box;
   color: $atl-black;
 
   th {
